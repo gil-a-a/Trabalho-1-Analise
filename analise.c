@@ -3,6 +3,11 @@
 #include <time.h>
 #include <math.h>
 
+struct dados_da_amostra{
+	int num_trocas;
+	double tempo_de_execucao; //n sei se precisa mudar o tipo pra clock_t, ent tem q ver isso dps
+};
+
 int* geraVetor(int tam);
 void printaVetor(int *vet, int tam);
 //============== Sorts ==============//
@@ -12,6 +17,15 @@ void selectionSort(int *vet, int tam);
 //Heap
 //Quick
 //===================================//
+double calculaMedia(int *valores, int tam)
+{
+	int i;
+	double media = 0;
+	for (i = 0; i < tam; i++)
+		media += valores[i];
+	media /= tam;
+}
+
 
 int main ()
 {
@@ -92,5 +106,4 @@ void selectionSort(int *vet, int tam)
 //Heap
 //Quick
 //===================================//
-
 
