@@ -16,7 +16,38 @@ void selectionSort(int *vet, int tam);
 void mergeSort(int *A, int p, int tam);
 void intercala(int *vetor, int comeco, int meio, int fim);
 //Heap
-//Quick
+int partition(int *vet, int p, int r)
+{
+	int aux;
+	int x = vet[r]; // pivô
+	int i = p-1, j;
+
+	for (j = p; j <= r-1; j++){
+		if (vet[j] < x) {
+			i++;
+			aux = vet[i];
+			vet[i] = vet[j];
+			vet[j] = aux;
+		}
+	}
+	
+	aux = vet[i + 1];
+	vet[i + 1] = vet[r];
+	vet[r] = aux;
+	
+	return i + 1;
+}
+
+void quickSort(int *vet, int p, int r)
+{
+	int q;
+	
+	if (p < r) {
+		q = partition(vet, p, r);	
+		quickSort(vet, p, q-1);
+		quickSort(vet, q+1, r);
+	}
+}
 //===================================//
 double calculaMedia(int *valores, int tam)
 {
