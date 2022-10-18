@@ -11,12 +11,23 @@ struct dados_da_amostra{
 int* geraVetor(int tam);
 void printaVetor(int *vet, int tam);
 //============== Sorts ==============//
+//Insertion
 void insertionSort(int *vet, int tam);
+
+//Selection
 void selectionSort(int *vet, int tam);
+
+//Merge
 void mergeSort(long long int *vetor, int comeco, int fim);
 void intercala(long long int * , int , int , int );
+
 //Heap
+void maxHeapify(int *vet, int tam, int i);
+void heapSort(int *vet, int tam);
+
 //Quick
+int partition(int *vet, int p, int r);
+void quickSort(int *vet, int p, int r);
 //===================================//
 double calculaMedia(int *valores, int tam)
 {
@@ -72,6 +83,7 @@ void printaVetor(int *vet, int tam)
 }
 
 //============== Sorts ==============//
+//Insertion
 void insertionSort(int *vet, int tam)
 {
 	int i, j, chave;
@@ -88,6 +100,7 @@ void insertionSort(int *vet, int tam)
 	}
 }
 
+//Selection
 void selectionSort(int *vet, int tam)
 {
 	int i, j, min, aux;
@@ -105,6 +118,7 @@ void selectionSort(int *vet, int tam)
 	}
 }
 
+//Merge
 void intercala(long long int *vetor, int comeco, int meio, int fim) {
 	int temp[fim - comeco + 1];
 	int pos = 0, pos_comeco = comeco, pos_final = meio + 1;
@@ -141,6 +155,80 @@ void mergeSort(long long int *vetor, int comeco, int fim){
         intercala(vetor, comeco, meio, fim);
     }
 }
+
 //Heap
+void maxHeapify(int *vet, int tam, int i)
+{
+	int aux;
+    int maior = i;
+    int e = 2*i + 1;
+    int d = 2*i + 2;
+ 
+    if (e < tam && vet[e] > vet[maior]){
+    	maior = e;
+	}
+ 
+    if (d < tam && vet[d] > vet[maior]){
+    	maior = d;
+	}
+ 
+    if (maior != i) {
+    	aux = vet[i];
+    	vet[i] = vet[maior];
+    	vet[maior] = aux;
+    	
+        maxHeapify(vet, tam, maior);
+    }
+}
+
+void heapSort(int *vet, int tam)
+{
+	int i, aux;
+	
+    for (i = tam/2 - 1; i >= 0; i--) {
+    	maxHeapify(vet, tam, i);
+	}
+	
+	for (i = tam - 1; i >= 0; i--) {
+    	aux = vet[0];
+    	vet[0] = vet[i];
+    	vet[i] = aux;
+ 
+        maxHeapify(vet, i, 0);
+	}
+}
+
 //Quick
+int partition(int *vet, int p, int r)
+{
+	int aux;
+	int x = vet[r]; // pivô
+	int i = p-1, j;
+
+	for (j = p; j <= r-1; j++){
+		if (vet[j] < x) {
+			i++;
+			aux = vet[i];
+			vet[i] = vet[j];
+			vet[j] = aux;
+		}
+	}
+	
+	aux = vet[i + 1];
+	vet[i + 1] = vet[r];
+	vet[r] = aux;
+	
+	return i + 1;
+}
+
+void quickSort(int *vet, int p, int r)
+{
+	int q;
+	
+	if (p < r) {
+		q = partition(vet, p, r);	
+		quickSort(vet, p, q-1);
+		quickSort(vet, q+1, r);
+	}
+}
 //===================================//
