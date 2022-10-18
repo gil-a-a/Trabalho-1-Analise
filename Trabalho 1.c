@@ -13,41 +13,10 @@ void printaVetor(int *vet, int tam);
 //============== Sorts ==============//
 void insertionSort(int *vet, int tam);
 void selectionSort(int *vet, int tam);
-void mergeSort(int *A, int p, int tam);
-void intercala(int *vetor, int comeco, int meio, int fim);
+void mergeSort(long long int *vetor, int comeco, int fim);
+void intercala(long long int * , int , int , int );
 //Heap
-int partition(int *vet, int p, int r)
-{
-	int aux;
-	int x = vet[r]; // pivô
-	int i = p-1, j;
-
-	for (j = p; j <= r-1; j++){
-		if (vet[j] < x) {
-			i++;
-			aux = vet[i];
-			vet[i] = vet[j];
-			vet[j] = aux;
-		}
-	}
-	
-	aux = vet[i + 1];
-	vet[i + 1] = vet[r];
-	vet[r] = aux;
-	
-	return i + 1;
-}
-
-void quickSort(int *vet, int p, int r)
-{
-	int q;
-	
-	if (p < r) {
-		q = partition(vet, p, r);	
-		quickSort(vet, p, q-1);
-		quickSort(vet, q+1, r);
-	}
-}
+//Quick
 //===================================//
 double calculaMedia(int *valores, int tam)
 {
@@ -61,8 +30,8 @@ double calculaMedia(int *valores, int tam)
 
 int main ()
 {
-	int tam;
-	int *vet;
+	long long int tam;
+	long long int *vet;
 	
 	srand(time(NULL));
 	
@@ -78,7 +47,7 @@ int main ()
 //	insertionSort(vet, tam);
 //	selectionSort(vet, tam);
     int p = vet[0];
-    mergeSort(vet, p, tam);
+    mergeSort(vet, 0, tam - 1);
 	printaVetor(vet, tam);
 	
 	return 0;
@@ -136,51 +105,42 @@ void selectionSort(int *vet, int tam)
 	}
 }
 
-void intercala(int *vetor, int comeco, int meio, int fim) {
-    int com1 = comeco, com2 = meio+1, comAux = 0, tam = fim-comeco+1;
-    int *vetAux;
-    vetAux = (int*)malloc(tam * sizeof(int));
+void intercala(long long int *vetor, int comeco, int meio, int fim) {
+	int temp[fim - comeco + 1];
+	int pos = 0, pos_comeco = comeco, pos_final = meio + 1;
+   
+	while (pos_comeco <= meio && pos_final <= fim){
+    	if (vetor[pos_comeco] < vetor[pos_final]){
+        	temp[pos++] = vetor[pos_comeco++];
+    	}
+    	else{
+        	temp[pos++] = vetor[pos_final++];
+    	}
+	}
 
-    while(com1 <= meio && com2 <= fim){
-        if(vetor[com1] < vetor[com2]) {
-            vetAux[comAux] = vetor[com1];
-            com1++;
-        } else {
-            vetAux[comAux] = vetor[com2];
-            com2++;
-        }
-        comAux++;
-    }
+	while (pos_comeco <= meio){
+		temp[pos++] = vetor[pos_comeco++];
+	}
 
-    while(com1 <= meio){  //Caso ainda haja elementos na primeira metade
-        vetAux[comAux] = vetor[com1];
-        comAux++;
-        com1++;
-    }
+	while (pos_final <= fim){
+		temp[pos++] = vetor[pos_final++];
+	}
 
-    while(com2 <= fim) {   //Caso ainda haja elementos na segunda metade
-        vetAux[comAux] = vetor[com2];
-        comAux++;
-        com2++;
-    }
-
-    for(comAux = comeco; comAux <= fim; comAux++){    //Move os elementos de volta para o vetor original
-        vetor[comAux] = vetAux[comAux-comeco];
-    }
-    
-    free(vetAux);
+   int i;
+   for (i = 0; i < pos; i++){
+      vetor[i + comeco] = temp[i];
+   }
+   return;
 }
 
-void mergeSort(int *vetor, int comeco, int fim){
-    if (comeco < fim) {
-        int meio = (fim+comeco)/2;
-
+void mergeSort(long long int *vetor, int comeco, int fim){
+    int meio = (fim+comeco)/2;
+	if (comeco < fim) {
         mergeSort(vetor, comeco, meio);
         mergeSort(vetor, meio+1, fim);
         intercala(vetor, comeco, meio, fim);
     }
 }
-
 //Heap
 //Quick
 //===================================//
