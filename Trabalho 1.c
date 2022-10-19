@@ -4,9 +4,11 @@
 #include <math.h>
 
 struct dados_da_amostra{
-	int num_trocas;
+	int num_execucao;
 	double tempo_de_execucao; //n sei se precisa mudar o tipo pra clock_t, ent tem q ver isso dps
-};
+	int num_trocas;
+	int num_comparacoes;
+}Dados;
 
 int* geraVetor(int tam);
 void printaVetor(int *vet, int tam);
@@ -15,11 +17,11 @@ void printaVetor(int *vet, int tam);
 void insertionSort(int *vet, int tam);
 
 //Selection
-void selectionSort(int *vet, int tam);
+void selectionSort(int *vet, int tam, struct dados_da_amostra *dado);
 
 //Merge
-void mergeSort(long long int *vetor, int comeco, int fim);
-void intercala(long long int * , int , int , int );
+void mergeSort(int *vet, int comeco, int fim);
+void intercala(int *vet, int comeco, int meio, int fim);
 
 //Heap
 void maxHeapify(int *vet, int tam, int i);
@@ -41,8 +43,9 @@ double calculaMedia(int *valores, int tam)
 
 int main ()
 {
-	long long int tam;
-	long long int *vet;
+	int tam;
+	int *vet;
+	struct dados_da_amostra dados[3];
 	
 	srand(time(NULL));
 	
@@ -56,10 +59,16 @@ int main ()
 	
 	printf("\nVetor organizado: ");
 //	insertionSort(vet, tam);
-//	selectionSort(vet, tam);
-    int p = vet[0];
-    mergeSort(vet, 0, tam - 1);
+	selectionSort(vet, tam, &dados[0]);
+//	mergeSort(vet, 0, tam - 1);
+//	heapSort(vet, tam);
+//	quickSort(vet, 0, tam-1);
+	
 	printaVetor(vet, tam);
+	
+	printf("Tempo de exec: %f\n", dados[0].tempo_de_execucao);
+	printf("Num comparacoes: %d\n", dados[0].num_comparacoes);
+	printf("Num trocas: %d\n", dados[0].num_trocas);
 	
 	return 0;
 }
@@ -101,13 +110,21 @@ void insertionSort(int *vet, int tam)
 }
 
 //Selection
-void selectionSort(int *vet, int tam)
+void selectionSort(int *vet, int tam, struct dados_da_amostra *dado)
 {
 	int i, j, min, aux;
+	clock_t tempo1, tempo2;
+	
+	dado->tempo_de_execucao = 0;
+	dado->num_trocas = 0;
+	dado->num_comparacoes = 0;
+	
+	tempo1 = clock();
 	
 	for (i = 0; i < tam-1; i++){
 		min = i;
 		for (j = i+1; j < tam; j++){
+			dado->num_comparacoes++;
 			if (vet[j] < vet[min]){
 				min = j;
 			}
@@ -115,44 +132,50 @@ void selectionSort(int *vet, int tam)
 		aux = vet[i];	
 		vet[i] = vet[min];
 		vet[min] = aux;
+		
+		dado->num_trocas++;
 	}
+	
+	tempo2 = clock();
+	
+	dado->tempo_de_execucao = (double) (tempo2 - tempo1)/CLOCKS_PER_SEC;
 }
 
 //Merge
-void intercala(long long int *vetor, int comeco, int meio, int fim) {
+void intercala(int *vet, int comeco, int meio, int fim) {
 	int temp[fim - comeco + 1];
 	int pos = 0, pos_comeco = comeco, pos_final = meio + 1;
    
 	while (pos_comeco <= meio && pos_final <= fim){
-    	if (vetor[pos_comeco] < vetor[pos_final]){
-        	temp[pos++] = vetor[pos_comeco++];
+    	if (vet[pos_comeco] < vet[pos_final]){
+        	temp[pos++] = vet[pos_comeco++];
     	}
     	else{
-        	temp[pos++] = vetor[pos_final++];
+        	temp[pos++] = vet[pos_final++];
     	}
 	}
 
 	while (pos_comeco <= meio){
-		temp[pos++] = vetor[pos_comeco++];
+		temp[pos++] = vet[pos_comeco++];
 	}
 
 	while (pos_final <= fim){
-		temp[pos++] = vetor[pos_final++];
+		temp[pos++] = vet[pos_final++];
 	}
 
    int i;
    for (i = 0; i < pos; i++){
-      vetor[i + comeco] = temp[i];
+      vet[i + comeco] = temp[i];
    }
    return;
 }
 
-void mergeSort(long long int *vetor, int comeco, int fim){
+void mergeSort(int *vet, int comeco, int fim){
     int meio = (fim+comeco)/2;
 	if (comeco < fim) {
-        mergeSort(vetor, comeco, meio);
-        mergeSort(vetor, meio+1, fim);
-        intercala(vetor, comeco, meio, fim);
+        mergeSort(vet, comeco, meio);
+        mergeSort(vet, meio+1, fim);
+        intercala(vet, comeco, meio, fim);
     }
 }
 
