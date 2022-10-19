@@ -48,7 +48,7 @@ int main ()
 	//struct dados_da_amostra dados[3];
     //struct dados_da_amostra dados_merge;
     //struct dados_da_amostra dados_heap;
-    struct dados_da_amostra dados_quick;
+    //struct dados_da_amostra dados_quick;
 
     /*dados_merge.num_comparacoes = 0;
     dados_merge.num_trocas = 0;
@@ -58,27 +58,128 @@ int main ()
     dados_heap.num_trocas = 0;
     dados_heap.tempo_de_execucao = 0;
 */
-    dados_quick.num_comparacoes = 0;
-    dados_quick.num_trocas = 0;
-    dados_quick.tempo_de_execucao = 0;
+    // dados_quick.num_comparacoes = 0;
+    // dados_quick.num_trocas = 0;
+    // dados_quick.tempo_de_execucao = 0;
 	
 
-    //clock_t tempo1_merge, tempo2_merge;
-    //clock_t tempo1_heap, tempo2_heap;
+    clock_t tempo1_merge, tempo2_merge;
+    clock_t tempo1_heap, tempo2_heap;
     clock_t tempo1_quick, tempo2_quick;
 
-	srand(time(NULL));
+    srand(time(NULL));
 	
 	printf("Insira o tamanho do vetor: ");
 		scanf("%d", &tam);
+
+    int nAmostras;
+
+    printf("Entre com o número de amostras: ");
+        scanf("%d", &nAmostras);
+
+    struct dados_da_amostra dados_insertion[nAmostras];
+    int i;
+    for(i = 0; i < nAmostras; i++) {
+        dados_insertion[i].num_comparacoes = 0;
+        dados_insertion[i].num_trocas = 0;
+        dados_insertion[i].tempo_de_execucao = 0;
+    }
+
+    struct dados_da_amostra dados_selection[nAmostras];
+    for(i = 0; i < nAmostras; i++) {
+        dados_selection[i].num_comparacoes = 0;
+        dados_selection[i].num_trocas = 0;
+        dados_selection[i].tempo_de_execucao = 0;
+    }
+
+    struct dados_da_amostra dados_merge[nAmostras];
+    for(i = 0; i < nAmostras; i++) {
+        dados_merge[i].num_comparacoes = 0;
+        dados_merge[i].num_trocas = 0;
+        dados_merge[i].tempo_de_execucao = 0;
+    }
+    struct dados_da_amostra dados_heap[nAmostras];
+    for(i = 0; i < nAmostras; i++) {
+        dados_heap[i].num_comparacoes = 0;
+        dados_heap[i].num_trocas = 0;
+        dados_heap[i].tempo_de_execucao = 0;
+    }
+    struct dados_da_amostra dados_quick[nAmostras];
+    for(i = 0; i < nAmostras; i++) {
+        dados_quick[i].num_comparacoes = 0;
+        dados_quick[i].num_trocas = 0;
+        dados_quick[i].tempo_de_execucao = 0;
+    }
+
+    for (i = 0; i < nAmostras; i++) {
+        
+        printf("\n **************** INSERTION **************** \n");
+        vet = geraVetor(tam);
+	    printf("\n\nVetor gerado: ");
+	    printaVetor(vet, tam);
+
+        insertionSort(vet, tam, &dados_insertion[i]);
+
+        printf("\n\nVetor organizado: ");
+        printaVetor(vet, tam);
+        printf("\n\ntempo: %f\nnum comp: %d\ntrocas: %d\n", dados_insertion[i].tempo_de_execucao, dados_insertion[i].num_comparacoes, dados_insertion[i].num_trocas);
+        
+        printf("\n **************** SELECTION **************** \n");
+        vet = geraVetor(tam);
+	    printf("\n\nVetor gerado: ");
+	    printaVetor(vet, tam);
+
+        selectionSort(vet, tam, &dados_selection[i]);
+
+        printf("\n\nVetor organizado: ");
+        printaVetor(vet, tam);
+        printf("\n\ntempo: %f\nnum comp: %d\ntrocas: %d\n", dados_selection[i].tempo_de_execucao, dados_selection[i].num_comparacoes, dados_selection[i].num_trocas);
+        
+        printf("\n **************** MERGE **************** \n");
+        vet = geraVetor(tam);
+	    printf("\n\nVetor gerado: ");
+	    printaVetor(vet, tam);
+
+        tempo1_merge = clock();
+        mergeSort(vet, 0, tam - 1, &dados_merge[i]);
+        tempo2_merge = clock();
+        dados_merge[i].tempo_de_execucao = (double)(tempo2_merge - tempo1_merge)/CLOCKS_PER_SEC;
+
+        printf("\n\nVetor organizado: ");
+        printaVetor(vet, tam);
+        printf("\n\ntempo: %f\nnum comp: %d\ntrocas: %d\n", dados_merge[i].tempo_de_execucao, dados_merge[i].num_comparacoes, dados_merge[i].num_trocas);
+        
+        printf("\n **************** HEAP **************** \n");
+        vet = geraVetor(tam);
+	    printf("\n\nVetor gerado: ");
+	    printaVetor(vet, tam);
+
+        tempo1_heap = clock();
+        heapSort(vet, tam, &dados_heap[i]);
+        tempo2_heap = clock();
+        dados_heap[i].tempo_de_execucao = (double)(tempo2_heap - tempo1_heap)/CLOCKS_PER_SEC;
+
+        printf("\n\nVetor organizado: ");
+        printaVetor(vet, tam);
+        printf("\n\ntempo: %f\nnum comp: %d\ntrocas: %d\n", dados_heap[i].tempo_de_execucao, dados_heap[i].num_comparacoes, dados_heap[i].num_trocas);
+        
+        printf("\n **************** QUICK **************** \n");
+        
+        vet = geraVetor(tam);
+	    printf("\n\nVetor gerado: ");
+	    printaVetor(vet, tam);
+
+        tempo1_quick = clock();
+        quickSort(vet, 0, tam-1, &dados_quick[i]);
+        tempo2_quick = clock();
+        dados_quick[i].tempo_de_execucao = (double)(tempo2_quick - tempo1_quick)/CLOCKS_PER_SEC;
+
+        printf("\n\nVetor organizado: ");
+        printaVetor(vet, tam);
+        printf("\n\ntempo: %f\nnum comp: %d\ntrocas: %d\n", dados_quick[i].tempo_de_execucao, dados_quick[i].num_comparacoes, dados_quick[i].num_trocas);
+        
+    }
 	
-	
-	vet = geraVetor(tam);
-	printf("\nVetor gerado: ");
-	//printaVetor(vet, tam);
-	
-	printf("\nVetor organizado: ");
-//	insertionSort(vet, tam);
 //	selectionSort(vet, tam, &dados[0]);
 
 /*    tempo1_merge = clock();
@@ -93,12 +194,12 @@ int main ()
     dados_heap.tempo_de_execucao = (double)(tempo2_heap - tempo1_heap)/CLOCKS_PER_SEC;
     printf("tempo: %f\nnum comp: %d\ntrocas: %d\n", dados_heap.tempo_de_execucao, dados_heap.num_comparacoes, dados_heap.num_trocas);
 */	
-    tempo1_quick = clock();
-    quickSort(vet, 0, tam-1, &dados_quick);
-	tempo2_quick = clock();
-    dados_quick.tempo_de_execucao = (double)(tempo2_quick - tempo1_quick)/CLOCKS_PER_SEC;
-	printf("tempo: %f\nnum comp: %d\ntrocas: %d\n", dados_quick.tempo_de_execucao, dados_quick.num_comparacoes, dados_quick.num_trocas);
-    printaVetor(vet, tam);
+    // tempo1_quick = clock();
+    // quickSort(vet, 0, tam-1, &dados_quick);
+	// tempo2_quick = clock();
+    // dados_quick.tempo_de_execucao = (double)(tempo2_quick - tempo1_quick)/CLOCKS_PER_SEC;
+	// printf("tempo: %f\nnum comp: %d\ntrocas: %d\n", dados_quick.tempo_de_execucao, dados_quick.num_comparacoes, dados_quick.num_trocas);
+    // printaVetor(vet, tam);
 	
 	/*printf("Tempo de exec: %f\n", dados[0].tempo_de_execucao);
 	printf("Num comparacoes: %d\n", dados[0].num_comparacoes);
