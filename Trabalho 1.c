@@ -126,14 +126,28 @@ int main ()
 
     srand(time(NULL));
 
-    FILE* fp_insertion = fopen("insertion.txt", "w+");
-    FILE* fp_selection = fopen("selection.txt", "w+");
-    FILE* fp_merge = fopen("merge.txt", "w+");
-    FILE* fp_heap = fopen("heap.txt", "w+");
-    FILE* fp_quick = fopen("quick.txt", "w+");
-	
-	printf("Insira o tamanho do vetor: ");
-		scanf("%d", &tam);
+    printf("Insira o tamanho do vetor: ");
+    scanf("%d", &tam);
+
+    char filename_insertion[50];
+    char filename_selection[50];
+    char filename_merge[50];
+    char filename_heap[50];
+    char filename_quick[50];
+
+    
+
+    sprintf(filename_insertion, "insertion%d.txt", tam);
+    sprintf(filename_selection, "selection%d.txt", tam);
+    sprintf(filename_heap, "heap%d.txt", tam);
+    sprintf(filename_merge, "merge%d.txt", tam);
+    sprintf(filename_quick, "quick%d.txt", tam);
+
+    FILE* fp_insertion = fopen(filename_insertion, "w+");
+    FILE* fp_selection = fopen(filename_selection, "w+");
+    FILE* fp_merge = fopen(filename_merge, "w+");
+    FILE* fp_heap = fopen(filename_heap, "w+");
+    FILE* fp_quick = fopen(filename_quick, "w+");
 
     int nAmostras;
 
