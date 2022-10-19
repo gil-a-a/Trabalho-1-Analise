@@ -1,0 +1,33 @@
+Selection Sort:
+
+[Amostra 1]
+Insira o tamanho do vetor: 1000000
+Tempo de exec: 1287.012000
+Num comparacoes: 1783293664
+Num trocas: 999999
+
+[Amostra 2]
+Insira o tamanho do vetor: 1000000
+Tempo de exec: 1279.845000
+Num comparacoes: 1783293664
+Num trocas: 999999
+
+[Amostra 3]
+Insira o tamanho do vetor: 1000000
+Tempo de exec: 1277.895000
+Num comparacoes: 1783293664
+Num trocas: 999999
+
+[Amostra 4]
+Insira o tamanho do vetor: 1000000
+Tempo de exec: 1273.408000
+Num comparacoes: 1783293664
+Num trocas: 999999
+
+[Amostra 5]
+Insira o tamanho do vetor: 1000000
+Tempo de exec: 1274.427000
+Num comparacoes: 1783293664
+Num trocas: 999999
+
+[Amostra 6]
