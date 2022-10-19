@@ -186,6 +186,11 @@ int main ()
         fprintf(fp_quick, "tempo: %f\nnum comp: %d\ntrocas: %d\n\n", dados_quick[i].tempo_de_execucao, dados_quick[i].num_comparacoes, dados_quick[i].num_trocas);
     }
 	
+	fclose(fp_selection);
+	fclose(fp_heap);
+	fclose(fp_insertion);
+	fclose(fp_quick);
+	fclose(fp_merge);
 
 	return 0;
 }
