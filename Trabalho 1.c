@@ -3,33 +3,33 @@
 #include <time.h>
 #include <math.h>
 
-struct dados_da_amostra{
+typedef struct dados_da_amostra{
 	int num_execucao;
-	double tempo_de_execucao; //n sei se precisa mudar o tipo pra clock_t, ent tem q ver isso dps
+	double tempo_de_execucao;
 	int num_trocas;
-	int num_comparacoes;
+	long long int num_comparacoes;
 }Dados;
 
-int* geraVetor(int tam);
-void printaVetor(int *vet, int tam);
+int* geraVetor(long int tam);
+void printaVetor(int *vet, long int tam);
 //============== Sorts ==============//
 //Insertion
-void insertionSort(int *vet, int tam, struct dados_da_amostra *dado);
+void insertionSort(int *vet, long int tam, struct dados_da_amostra *dado);
 
 //Selection
-void selectionSort(int *vet, int tam, struct dados_da_amostra *dado);
+void selectionSort(int *vet, int long tam, struct dados_da_amostra *dado);
 
 //Merge
 void mergeSort(int *vet, int comeco, int fim, struct dados_da_amostra *dados);
 void intercala(int *vet, int comeco, int meio, int fim, struct dados_da_amostra *dados);
 
 //Heap
-void maxHeapify(int *vet, int tam, int i, struct dados_da_amostra *dados);
-void heapSort(int *vet, int tam, struct dados_da_amostra *dados);
+void maxHeapify(int *vet, long int tam, int i, struct dados_da_amostra *dados);
+void heapSort(int *vet, long int tam, struct dados_da_amostra *dados);
 
 //Quick
-int partition(int *vet, int p, int r, struct dados_da_amostra *dados);
-void quickSort(int *vet, int p, int r, struct dados_da_amostra *dados);
+int partition(int *vet, int p, long int r, struct dados_da_amostra *dados);
+void quickSort(int *vet, int p, long int r, struct dados_da_amostra *dados);
 //===================================//
 double calculaMedia(int *valores, int tam)
 {
@@ -43,8 +43,8 @@ double calculaMedia(int *valores, int tam)
 
 int main ()
 {
-	int tam;
 	int *vet;
+	long int tam;
 
     clock_t tempo1_merge, tempo2_merge;
     clock_t tempo1_heap, tempo2_heap;
@@ -66,7 +66,7 @@ int main ()
     printf("Entre com o número de amostras: ");
         scanf("%d", &nAmostras);
 
-    struct dados_da_amostra dados_insertion[nAmostras];
+    struct dados_da_amostra* dados_insertion = (struct dados_da_amostra*) malloc(sizeof(struct dados_da_amostra)*nAmostras);
     int i;
     for(i = 0; i < nAmostras; i++) {
         dados_insertion[i].num_comparacoes = 0;
@@ -74,26 +74,26 @@ int main ()
         dados_insertion[i].tempo_de_execucao = 0;
     }
 
-    struct dados_da_amostra dados_selection[nAmostras];
+    struct dados_da_amostra* dados_selection = (struct dados_da_amostra*) malloc(sizeof(struct dados_da_amostra)*nAmostras);
     for(i = 0; i < nAmostras; i++) {
         dados_selection[i].num_comparacoes = 0;
         dados_selection[i].num_trocas = 0;
         dados_selection[i].tempo_de_execucao = 0;
     }
 
-    struct dados_da_amostra dados_merge[nAmostras];
+    struct dados_da_amostra* dados_merge = (struct dados_da_amostra*) malloc(sizeof(struct dados_da_amostra)*nAmostras);
     for(i = 0; i < nAmostras; i++) {
         dados_merge[i].num_comparacoes = 0;
         dados_merge[i].num_trocas = 0;
         dados_merge[i].tempo_de_execucao = 0;
     }
-    struct dados_da_amostra dados_heap[nAmostras];
+    struct dados_da_amostra* dados_heap = (struct dados_da_amostra*) malloc(sizeof(struct dados_da_amostra)*nAmostras);
     for(i = 0; i < nAmostras; i++) {
         dados_heap[i].num_comparacoes = 0;
         dados_heap[i].num_trocas = 0;
         dados_heap[i].tempo_de_execucao = 0;
     }
-    struct dados_da_amostra dados_quick[nAmostras];
+    struct dados_da_amostra* dados_quick = (struct dados_da_amostra*) malloc(sizeof(struct dados_da_amostra)*nAmostras);
     for(i = 0; i < nAmostras; i++) {
         dados_quick[i].num_comparacoes = 0;
         dados_quick[i].num_trocas = 0;
@@ -101,13 +101,15 @@ int main ()
     }
 
     for (i = 0; i < nAmostras; i++) {
-        
+		printf("Amostra %d\n", i+1);        
         //printf("\n **************** INSERTION **************** \n");
         vet = geraVetor(tam);
 	    // printf("\n\nVetor gerado: ");
 	    // printaVetor(vet, tam);
 
-        insertionSort(vet, tam, &dados_insertion[i]);
+		printf("Insertion comecou\n");
+        
+		insertionSort(vet, tam, &dados_insertion[i]);
 
         // printf("\n\nVetor organizado: ");
         // printaVetor(vet, tam);
@@ -118,7 +120,9 @@ int main ()
 	    // printf("\n\nVetor gerado: ");
 	    // printaVetor(vet, tam);
 
-        selectionSort(vet, tam, &dados_selection[i]);
+        printf("Selection comecou\n");
+        
+		selectionSort(vet, tam, &dados_selection[i]);
 
         // printf("\n\nVetor organizado: ");
         // printaVetor(vet, tam);
@@ -128,8 +132,10 @@ int main ()
         vet = geraVetor(tam);
 	    // printf("\n\nVetor gerado: ");
 	    // printaVetor(vet, tam);
-
-        tempo1_merge = clock();
+	    
+		printf("Merge comecou\n");
+        
+		tempo1_merge = clock();
         mergeSort(vet, 0, tam - 1, &dados_merge[i]);
         tempo2_merge = clock();
         dados_merge[i].tempo_de_execucao = (double)(tempo2_merge - tempo1_merge)/CLOCKS_PER_SEC;
@@ -142,8 +148,10 @@ int main ()
         vet = geraVetor(tam);
 	    // printf("\n\nVetor gerado: ");
 	    // printaVetor(vet, tam);
-
-        tempo1_heap = clock();
+	    
+		printf("Heap comecou\n");
+        
+		tempo1_heap = clock();
         heapSort(vet, tam, &dados_heap[i]);
         tempo2_heap = clock();
         dados_heap[i].tempo_de_execucao = (double)(tempo2_heap - tempo1_heap)/CLOCKS_PER_SEC;
@@ -157,7 +165,8 @@ int main ()
         vet = geraVetor(tam);
 	    // printf("\n\nVetor gerado: ");
 	    // printaVetor(vet, tam);
-
+		
+		printf("Quick comecou\n");
         tempo1_quick = clock();
         quickSort(vet, 0, tam-1, &dados_quick[i]);
         tempo2_quick = clock();
@@ -171,7 +180,7 @@ int main ()
 
     for(i = 0; i < nAmostras; i++) {
         fprintf(fp_insertion, "[Amostra %d]\n", i+1);
-        fprintf(fp_insertion, "tempo: %f\nnum comp: %d\ntrocas: %d\n\n", dados_insertion[i].tempo_de_execucao, dados_insertion[i].num_comparacoes, dados_insertion[i].num_trocas);
+        fprintf(fp_insertion, "tempo: %f\nnum comp: %ld\ntrocas: %ld\n\n", dados_insertion[i].tempo_de_execucao, dados_insertion[i].num_comparacoes, dados_insertion[i].num_trocas);
 
         fprintf(fp_selection, "[Amostra %d]\n", i+1);
         fprintf(fp_selection, "tempo: %f\nnum comp: %d\ntrocas: %d\n\n", dados_selection[i].tempo_de_execucao, dados_selection[i].num_comparacoes, dados_selection[i].num_trocas);
@@ -195,18 +204,18 @@ int main ()
 	return 0;
 }
 
-int* geraVetor(int tam)
+int* geraVetor(long int tam)
 {
 	int i;
 	int *vet = (int *) malloc(sizeof(int)*tam);
-		
+	
 	for (i = 0; i < tam; i++)
 		vet[i] = rand() % 100;
 	
 	return vet;
 }
 
-void printaVetor(int *vet, int tam)
+void printaVetor(int *vet, long int tam)
 {
 	int i;
 	for (i = 0; i < tam; i++)
@@ -215,7 +224,7 @@ void printaVetor(int *vet, int tam)
 
 //============== Sorts ==============//
 //Insertion
-void insertionSort(int *vet, int tam, struct dados_da_amostra *dado)
+void insertionSort(int *vet, long int tam, struct dados_da_amostra *dado)
 {
 	int i, j, chave;
 	clock_t tempo1, tempo2;
@@ -246,7 +255,7 @@ void insertionSort(int *vet, int tam, struct dados_da_amostra *dado)
 }
 
 //Selection
-void selectionSort(int *vet, int tam, struct dados_da_amostra *dado)
+void selectionSort(int *vet, int long tam, struct dados_da_amostra *dado)
 {
 	int i, j, min, aux;
 	clock_t tempo1, tempo2;
@@ -325,7 +334,7 @@ void mergeSort(int *vet, int comeco, int fim, struct dados_da_amostra *dados){
 }
 
 //Heap
-void maxHeapify(int *vet, int tam, int i, struct dados_da_amostra *dados)
+void maxHeapify(int *vet, long int tam, int i, struct dados_da_amostra *dados)
 {
 	int aux;
     int maior = i;
@@ -353,7 +362,7 @@ void maxHeapify(int *vet, int tam, int i, struct dados_da_amostra *dados)
     }
 }
 
-void heapSort(int *vet, int tam, struct dados_da_amostra *dados)
+void heapSort(int *vet, long int tam, struct dados_da_amostra *dados)
 {
 	int i, aux;
 	
@@ -372,7 +381,7 @@ void heapSort(int *vet, int tam, struct dados_da_amostra *dados)
 }
 
 //Quick
-int partition(int *vet, int p, int r, struct dados_da_amostra *dados)
+int partition(int *vet, int p, long int r, struct dados_da_amostra *dados)
 {
 	int aux;
 	int x = vet[r]; // pivô
@@ -398,7 +407,7 @@ int partition(int *vet, int p, int r, struct dados_da_amostra *dados)
 	return i + 1;
 }
 
-void quickSort(int *vet, int p, int r, struct dados_da_amostra *dados)
+void quickSort(int *vet, int p, long int r, struct dados_da_amostra *dados)
 {
 	int q;
 	
