@@ -4,11 +4,22 @@
 #include <math.h>
 
 typedef struct dados_da_amostra{
-	int num_execucao;
 	double tempo_de_execucao;
 	int num_trocas;
 	long long int num_comparacoes;
 }Dados;
+
+typedef struct estatisticas{
+	double media;
+	double variancia;
+	double desvio_padrao;
+}Estats;
+
+struct dados_sort{
+	Estats tempo_de_execucao;
+	Estats num_trocas;
+	Estats num_comparacoes;
+};
 
 int* geraVetor(long int tam);
 void printaVetor(int *vet, long int tam);
@@ -31,6 +42,7 @@ void heapSort(int *vet, long int tam, struct dados_da_amostra *dados);
 int partition(int *vet, int p, long int r, struct dados_da_amostra *dados);
 void quickSort(int *vet, int p, long int r, struct dados_da_amostra *dados);
 //===================================//
+				//Mudar o primeiro parâmetro pra vetor de struct dados_da_amostra
 double calculaMedia(int *valores, int tam)
 {
 	int i;
@@ -38,8 +50,68 @@ double calculaMedia(int *valores, int tam)
 	for (i = 0; i < tam; i++)
 		media += valores[i];
 	media /= tam;
+	
+	return media;
+}
+				//Ignorar/Mudar o primeiro parâmetro pra vetor de struct dados_da_amostra
+double calculaVariancia(int *valores, int tam, double media)
+{
+	int i;
+	double variancia = 0;
+	for (i = 0; i < tam; i++)
+		variancia += pow((valores[i] - media), 2);	//valores[i] precisa ser trocado pra 
+	variancia /= tam;	//aqui precisa ver se é variância populacional ou amostral. Se for amostral, ent é tam-1 ao invés de tam
+	
+	return variancia;
 }
 
+double calculaDesvioPadrao(double variancia)
+{
+	double dp;
+	dp = sqrt(variancia);
+	return dp;
+}
+
+struct dados_sort calculaEstatisticas(struct dados_da_amostra* dados, int tamAmostra)
+{
+	struct dados_sort estats;
+	/*
+	***********************
+	É mais fácil fazer um for calculando td aq msm
+	*/
+	estats.tempo_de_execucao.media = calculaMedia(vet, tam);	//Ignorar//passar o vetor dados e acessar só tempo_de_execução de cada elemento
+	estats.tempo_de_execucao.variancia = calculaVariancia(vet, tam, dados.tempo_de_execucao.media);	//pra fazer a media
+	estats.tempo_de_execucao.desvio_padrao = calculaDesvioPadrao(dados.tempo_de_execucao.variancia);
+	
+	estats.num_trocas.media = calculaMedia(vet, tam);	///Ignorar/mesma coisa q ali em cima, mas com num_trocas
+	estats.num_trocas.variancia = calculaVariancia(vet, tam, dados.num_trocas.media);
+	estats.num_trocas.desvio_padrao = calculaDesvioPadrao(dados.num_trocas.variancia);
+	
+	estats.num_comparacoes.media = calculaMedia(vet, tam);	///Ignorar/igual, mas com num_comparacoes
+	estats.num_comparacoes.variancia = calculaVariancia(vet, tam, dados.num_comparacoes.media);
+	estats.num_comparacoes.desvio_padrao = calculaDesvioPadrao(dados.num_comparacoes.variancia);
+	
+	return estats;
+}
+
+void printaEstats(struct dados_sort dados)
+{
+	printf("[Tempo de exec]\n");
+	printf("Media: %f\n", dados.tempo_de_execucao.media);
+	printf("Variancia: %f\n", dados.tempo_de_execucao.variancia);
+	printf("DP: %f\n", dados.tempo_de_execucao.desvio_padrao);
+	
+	printf("[N trocas]\n");
+	printf("Media: %f\n", dados.num_trocas.media);
+	printf("Variancia: %f\n", dados.num_trocas.variancia);
+	printf("DP: %f\n", dados.num_trocas.desvio_padrao);
+	
+	printf("[N comparas]\n");
+	printf("Media: %f\n", dados.num_comparacoes.media);
+	printf("Variancia: %f\n", dados.num_comparacoes.variancia);
+	printf("DP: %f\n", dados.num_comparacoes.desvio_padrao);
+	
+}
 
 int main ()
 {
@@ -66,8 +138,8 @@ int main ()
     printf("Entre com o número de amostras: ");
         scanf("%d", &nAmostras);
 
-    struct dados_da_amostra* dados_insertion = (struct dados_da_amostra*) malloc(sizeof(struct dados_da_amostra)*nAmostras);
     int i;
+    struct dados_da_amostra* dados_insertion = (struct dados_da_amostra*) malloc(sizeof(struct dados_da_amostra)*nAmostras);
     for(i = 0; i < nAmostras; i++) {
         dados_insertion[i].num_comparacoes = 0;
         dados_insertion[i].num_trocas = 0;
@@ -194,6 +266,29 @@ int main ()
         fprintf(fp_quick, "[Amostra %d]\n", i+1);
         fprintf(fp_quick, "tempo: %f\nnum comp: %d\ntrocas: %d\n\n", dados_quick[i].tempo_de_execucao, dados_quick[i].num_comparacoes, dados_quick[i].num_trocas);
     }
+	
+	//calcula estatisticas
+	struct dados_sort estatisticas_insertion = calculaEstatisticas(dados_insertion, nAmostras);
+	struct dados_sort estatisticas_selection = calculaEstatisticas(dados_selection, nAmostras);
+	struct dados_sort estatisticas_merge = calculaEstatisticas(dados_merge, nAmostras);
+	struct dados_sort estatisticas_heap = calculaEstatisticas(dados_heap, nAmostras);
+	struct dados_sort estatisticas_quick = calculaEstatisticas(dados_quick, nAmostras);
+	
+	
+	printf("\n\nInsertion:\n");
+	printaEstats(estatisticas_insertion);
+	
+	printf("\nSelection:\n");
+	printaEstats(estatisticas_selection);
+	
+	printf("\nMerge:\n");
+	printaEstats(estatisticas_merge);
+	
+	printf("\nHeap:\n");
+	printaEstats(estatisticas_heap);
+	
+	printf("\nQuick:\n");
+	printaEstats(estatisticas_quick);
 	
 	fclose(fp_selection);
 	fclose(fp_heap);
@@ -419,3 +514,4 @@ void quickSort(int *vet, int p, long int r, struct dados_da_amostra *dados)
 	}
 }
 //===================================//
+
